@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use GuzzleHttp\Middleware;
 use Illuminate\Routing\RouteUri;
+use App\Http\Controllers\CommentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,10 +42,12 @@ Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.e
 Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
-
+Route::post('/comments/{id}', [CommentsController::class, 'store'])->name('posts.comments');
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-Route::post('/posts{id}/store', [CommentsController::class, 'store']);
+// Route::post('/posts{id}/store', [CommentsController::class, 'store']);
+
+

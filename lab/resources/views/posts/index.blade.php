@@ -21,33 +21,20 @@
         @foreach($posts as $post)
 {{--            @dd($post)--}}
             <tr>
-{{--                <td>{{$post['id']}}</td>--}}
-{{--                <td>{{$post['title']}}</td>--}}
-{{--                <td>{{$post['posted_by']}}</td>--}}
-{{--                <td>{{$post['created_at']}}</td>--}}
+
 
                 <td>{{$post->id}}</td>
                 <td>{{$post->title}}</td>
 
-{{--                @if($post->user)--}}
-{{--                    <td>{{$post->user->name}}</td>--}}
-{{--                @else--}}
-{{--                    <td>User Not Found</td>--}}
-{{--                    @endif--}}
-{{--                <td>{{$post->user?->name}}</td>--}}
-{{--                <td>{{$post->user ? $post->user->name : 'Not Found'}}</td>--}}
+
                 <td>{{$post->user->name ?? 'Not Found'}}</td>
-{{--                <td>{{$post->test}}</td>--}}
+
                 <td>{{$post->created_at->format('Y-m-d')}}</td>
-{{-- 
-                <td>@foreach($post ->comments as $comment)
+
                 
-                <p>{{$comment ->id}}</p>
-                @endforeach
-                 --}}
                 </td>
                 <td>
-{{--                    href="/posts/{{$post['id']}}"--}}
+
                     <a href="{{route('posts.show', $post->id)}}" class="btn btn-info">View</a>
                     <a href="{{route('posts.edit', $post->id)}}" class="btn btn-primary">Edit</a>
                     <form  style="display: inline" method="POST"action=" {{ route('posts.destroy', $post->id) }}">

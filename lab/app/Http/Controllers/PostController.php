@@ -6,10 +6,10 @@ use App\Models\User;
 use public\uploads\books;
 use Illuminate\Http\Request;
 use App\Models\Post;
-use Termwind\Components\Dd;
+
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Http\Controllers\CommentsController;
+use App\Models\Comment;
 
 class PostController extends Controller
 {
@@ -34,23 +34,7 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
        
- //get me the form submission data
-//        $data = request()->all();
-//
-//        $title = $data['title'];
-//        $description = $data['description'];
-//
 
-//        $title = request()->title;
-//        $description = request()->description;
-
-    //    $request->validate([
-    //        'title' => ['required', 'min:3'],
-    //        'description' => ['required', 'min:5'],
-    //    ],
-//            'title.required' => 'this message is changed',
-//            'title.min' => 'minimum override message',
-    //    );
     $title=$request->title;
     $description=$request->description;
     $user_id=$request->user_id;
@@ -62,7 +46,7 @@ class PostController extends Controller
     $name="book-".uniqid(). ".$ext";
     // dd($name);
     $img->move(public_path('uploads/books'),$name);
-
+   
 
         //store the form data inside the database
         Post::create([
@@ -70,27 +54,29 @@ class PostController extends Controller
             'description' => $description,
             'user_id' => $user_id,
             'img' =>$name,
+           
              
             // 'user_id' => $userId,
         ]);
-
+        
         return to_route('posts.index');
     }
 
     public function show($postId)
     {
-//        $allJavascriptPosts = Post::where('title', 'Javascript')->get();
-//        dd($allJavascriptPosts);
 
-//        $result = Post::where('id', $postId)->get(); //return Collection object
-//        dd($result);
-//        $post = Post::where('id', $postId)->first(); //return App\Models\Post object
         $users = user::get();
         $post = Post::find($postId);
-      
+        $allComments = Comment::get();
         
-       
-        return view("posts.show", ['post' => $post,'users' => $users,]);
+        return view("posts.show", ['post' => $post,'users' => $users,
+    
+        'posts'=> $post,
+        'users' => $users,
+        'comments' => $allComments,
+         'id' => $postId
+    
+    ]);
     }
 
     public function edit(Post $post){
@@ -109,9 +95,9 @@ class PostController extends Controller
 
 
     }
-    public function update($postId,UpdatePostRequest $request){
+    public function update($id ,UpdatePostRequest $request){
 
-        $post = Post::find($postId);
+        $post = Post::find($id );
         $post->update([
             'title' => $request->title,
             'description' => $request->description,
@@ -121,19 +107,35 @@ class PostController extends Controller
 
         return to_route('posts.index');
 
+        if($request->hasFile('img')){
+
+            $img = $request->file('img');
+            // dd($img);
+            $ext = $img->getClientOriginalExtension();
+            // dd($ext);
+            $name="book-".uniqid(). ".$ext";
+            // dd($name);
+            $img->move(public_path('uploads/books'),$name);
+        
+
+        
+        };
+
 }
 
 
-public function destroy($postId){
+public function destroy($id ){
 
-//  single query  Post::where("id",$postId)->delete();
-    $post = Post::find($postId);
+    $post = Post::find($id );
+    if($post->img !== null){
+    unlink(public_path('uploads/books/').$post->img);
+    }
     $post->delete();
        
 return to_route('posts.index');
 }
 
 
-}
 
 
+};

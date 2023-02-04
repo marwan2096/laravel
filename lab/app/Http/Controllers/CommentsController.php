@@ -7,54 +7,33 @@ use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-class CommentController extends Controller
-{
-    public function show($id)
+
+
+    class CommentsController extends Controller
     {
-        // get the comment with the same id from the database
-        $comment = Comment::find($id);
-
-        return view("comments.show", ['comment' => $comment]);
-    }
-
+        public function store(Request $request ,$id)
+        {
+            // return 'insert in database';
+            // $post_id = 7 ;
+            // $data = $request->all();
+            // $comment = $data['comment'];
+            // Comment::create([
     
-    public function store($postID, Request $request)
-    {
-        // get all data from form user submitted
-        $commentData = $request->all();
-        // validate if all fields are provided from form
-
-        // get post with given id
-        $post = Post::find($postID);
-
-        // add comment to post
-        $post->comments()->create(
-            [
-                'comment' => $commentData['comment'],
-                'user_id' => Auth::id(),
-            ]
-        );
-
-        // redirect to index page route
-        return redirect()->route('posts.show', ['post' => $postID]);
-    }
+            //     'comment_body' => $comment,
+            //     'post_id' => $post_id
+            // ]);
+    
+            $comment = new Comment();
+            $comment->comment_body = $request->comment;
+            $comment->post_id =$id ;
+            $comment->save();
+            // return "insert" ;
+                  return redirect()->back() ;
+    
+        
 
 
-
-    public function edit($id)
-    {
-
-        // get post with given id
-        $comment = Comment::find($id);
-        return view("comments.edit", ['comment' => $comment]);
-    }
-
-
-
-
-
-
-
-
+            }
+        
 }
 

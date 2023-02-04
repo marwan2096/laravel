@@ -29,6 +29,39 @@
       </div>
     </div>
 
+
+
+
+    <form method="POST" action="{{route('posts.comments',$id)}}">
+      @csrf
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Add your comment</label>
+        <input type="text" class="form-control" id="exampleInputPassword1" name="comment">
+      </div>
+      <button type="submit" class="btn btn-primary">add comment</button>
+    
+    @foreach($comments as $comment)
+    <div class="card" @if($comment->post_id ==$posts->id) selected @else hidden @endif>
+      <div class="card-header">
+      comment {{$comment['id']}}
+      </div>
+     <div class="card-body" >
+       
+  
+         <p class="card-text">{{$comment['comment_body']}}</p>
+        
+      </div>
+    </div>
+  
+    
+  
+    @endforeach
+  </form>
+    <a href="{{route('posts.index')}}" class="btn btn-primary">go to index</a>
+
+
+
+
       @endsection
  
  

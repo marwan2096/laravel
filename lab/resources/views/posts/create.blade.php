@@ -47,14 +47,7 @@
           </div>
          
 
-        <div class="mb-3">
-            <label class="form-control">add comment</label>
-            <textarea
-                name="body"
-                class="form-control"
-            ></textarea>
-            <button type="submit" class=>add comment</button>
-            </div>
+        
 
 
 

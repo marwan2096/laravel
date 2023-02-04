@@ -26,10 +26,17 @@ class UpdatePostRequest extends FormRequest
         return [
     'title' => ['required', 'min:3','unique:posts'],
     'description' => ['required', 'min:5'],
+    'img' =>'nullable|image|',
         ];
-    }
 
-public function messages()
+       
+
+
+
+
+
+    }
+  function messages()
 {
     return [
         'title.required' => 'this message is changed',
