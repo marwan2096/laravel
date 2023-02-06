@@ -13,27 +13,24 @@ use Illuminate\Support\Facades\Auth;
     {
         public function store(Request $request ,$id)
         {
-            // return 'insert in database';
-            // $post_id = 7 ;
-            // $data = $request->all();
-            // $comment = $data['comment'];
-            // Comment::create([
-    
-            //     'comment_body' => $comment,
-            //     'post_id' => $post_id
-            // ]);
-    
-            $comment = new Comment();
+          
+            $comment = new comment();
             $comment->comment_body = $request->comment;
             $comment->post_id =$id ;
             $comment->save();
-            // return "insert" ;
+           
                   return redirect()->back() ;
     
-        
-
-
+    
             }
         
+
+            public function destroy($id)
+    {
+        $comment = comment::find($id);
+  
+        $comment->delete();
+        return redirect()->back() ;
+    }
 }
 

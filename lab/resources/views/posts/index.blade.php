@@ -6,6 +6,7 @@
     <div class="text-center">
        <a href="{{route('posts.create')}}" class="mt-4 btn btn-success">Create Post</a>
     </div>
+
     <table class="table mt-4">
         <thead>
         <tr>
@@ -19,10 +20,8 @@
         <tbody>
 
         @foreach($posts as $post)
-{{--            @dd($post)--}}
+
             <tr>
-
-
                 <td>{{$post->id}}</td>
                 <td>{{$post->title}}</td>
 
@@ -35,19 +34,22 @@
                 </td>
                 <td>
 
-                    <a href="{{route('posts.show', $post->id)}}" class="btn btn-info">View</a>
-                    <a href="{{route('posts.edit', $post->id)}}" class="btn btn-primary">Edit</a>
-                    <form  style="display: inline" method="POST"action=" {{ route('posts.destroy', $post->id) }}">
-                        <button onclick="return confirm('Are you sure?')" class="btn btn-danger" type="submit">Delete</button>
-                        @csrf
-                      @method('Delete')
-                    </form>
-                </td>
+        <a href="{{route('posts.show', $post->id)}}" class="btn btn-info">View</a>
+         <a href="{{route('posts.edit', $post->id)}}" class="btn btn-primary">Edit</a>
+        <form  style="display: inline" method="POST"action=" {{ route('posts.destroy', $post->id) }}">
+        <button onclick="return confirm('Are you sure?')" class="btn btn-danger" type="submit">Delete</button>
+            @csrf
+             @method('Delete')
+            </form>
+            </td>
             </tr>
         @endforeach
 
         </tbody>
     </table>
+
+    {{-- pagination --}}
+    
     {{$posts->links('pagination::bootstrap-4')}}
 
     

@@ -23,11 +23,6 @@ class comment extends Model
 
 
 
-
-
-
-
-
 }
 
 

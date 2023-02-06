@@ -15,21 +15,26 @@
 @endif
 
 
+
 <body>
-  <form method="POST" action="{{ route('posts.update', $post->id) }}"enctype="multipart/form-data">>
+  <form method="POST" action="{{ route('posts.update', $post->id) }}"enctype="multipart/form-data">
     @csrf
         @method('PUT')
+
+
     <div class="mb-3">
         <label class="form-label">Title</label>
         <input name="title" type="text" class="form-control"value="{{$post->title}}" >
     </div>
+
+
     <div class="mb-3">
-        <label class="form-label">
+        <label class="form-label">description</label>
         <textarea name="description"  class="form-control" >{{$post->description}}</textarea>
-           
-          
-     
+    
     </div>
+
+
     <div class="mb-3">
       <label class="form-check-label">Post Creator</label>
 
@@ -39,19 +44,25 @@
                  
           @endforeach
       </select></div>
+   
 
 
-      <div class="mb-3">
-            
-        <input class="form-control-file" type="file" name="img">
-      </div>
+
+    <label class="block mb-4">
+        <span class="sr-only">Choose File</span>
+        <img src="{{Storage::disk('local')->url($post->image)}}" alt="" srcset="">
+        <input type="file" name="image"
      
+    </label>
+     <br>
+    
     <button type="submit" class="btn btn-success">update</button>
-    
+
+    </form>
 
 
-    
-</form>
+
+
     @endsection
 
 

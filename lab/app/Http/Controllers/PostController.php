@@ -9,19 +9,27 @@ use App\Models\Post;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Comment;
+use App\Providers\TagsServiceProvider;
+
 
 class PostController extends Controller
 {
     public function index()
     {
-        //select * from posts;
+       
+        //eager loading function
+        // $allPosts = Post::with('user')->get();
         $allPosts = Post::paginate(5);
         return view('posts.index',[
-            'posts' => $allPosts,
+           'posts' => $allPosts,
         ]);
     }
-
+   
+    
+    
+//  create new post 
     public function create()
     {
         $users = User::all();
@@ -31,6 +39,9 @@ class PostController extends Controller
         ]);
     }
 
+
+
+//  store post 
     public function store(StorePostRequest $request)
     {
        
@@ -39,38 +50,42 @@ class PostController extends Controller
     $description=$request->description;
     $user_id=$request->user_id;
     
-    $img = $request->file('img');
-    // dd($img);
-    $ext = $img->getClientOriginalExtension();
-    // dd($ext);
-    $name="book-".uniqid(). ".$ext";
-    // dd($name);
-    $img->move(public_path('uploads/books'),$name);
-   
+  
+    //   image store  and validation
+    $this->validate($request, [
+        'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+    ]);
 
-        //store the form data inside the database
+    $image_path = $request->file('image')->store('image', 'public');
+
+    session()->flash('success', 'Image Upload successfully');
+   
+    // store
+        
         Post::create([
             'title' =>$title,
             'description' => $description,
             'user_id' => $user_id,
-            'img' =>$name,
-           
-             
-            // 'user_id' => $userId,
+            'image' => $image_path,
+        
+            
         ]);
         
         return to_route('posts.index');
     }
 
+
+    //  show post 
     public function show($postId)
     {
+        
 
         $users = user::get();
         $post = Post::find($postId);
-        $allComments = Comment::get();
+        $allComments = comment::get();
         
-        return view("posts.show", ['post' => $post,'users' => $users,
-    
+        return view("posts.show", 
+        ['post' => $post,
         'posts'=> $post,
         'users' => $users,
         'comments' => $allComments,
@@ -79,6 +94,9 @@ class PostController extends Controller
     ]);
     }
 
+
+    
+        // edit post 
     public function edit(Post $post){
 
         $users = User::all();
@@ -90,39 +108,23 @@ class PostController extends Controller
         ]);
 
 
-        // return view("posts.edit", ['post' => $post]);
-
-
-
     }
+    // update post
     public function update($id ,UpdatePostRequest $request){
-
+        $image_path = $request->file('image')->store('image', 'public');
         $post = Post::find($id );
         $post->update([
             'title' => $request->title,
             'description' => $request->description,
             'user_id' => $request->user_id,
-
+            'image' => $image_path,
+           
         ]);
-
+        
         return to_route('posts.index');
 
-        if($request->hasFile('img')){
-
-            $img = $request->file('img');
-            // dd($img);
-            $ext = $img->getClientOriginalExtension();
-            // dd($ext);
-            $name="book-".uniqid(). ".$ext";
-            // dd($name);
-            $img->move(public_path('uploads/books'),$name);
-        
-
-        
-        };
-
-}
-
+    }
+// delete post
 
 public function destroy($id ){
 
@@ -134,7 +136,6 @@ public function destroy($id ){
        
 return to_route('posts.index');
 }
-
 
 
 
